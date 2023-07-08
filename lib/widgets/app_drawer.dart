@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:meals/screens/filters_screen.dart';
 
 class AppDrawer extends StatelessWidget {
-  const AppDrawer({
-    super.key,
-  });
+  const AppDrawer(
+      {super.key,
+      required this.selectedFilters,
+      required this.onFiltersScreenPop});
 
+  final Map<Filter, bool> selectedFilters;
+  final void Function({required Map<Filter, bool> selectedFilters})
+      onFiltersScreenPop;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -23,16 +27,21 @@ class AppDrawer extends StatelessWidget {
           DrawerListTile(
             iconData: Icons.settings,
             title: 'Filters',
-            onDrawerTilePressed: () {
+            onDrawerTilePressed: () async {
               // Pushing into Navigation Stack Code
               // Creating route on the fly
-              Navigator.of(context).push(
+              final result =
+                  await Navigator.of(context).push<Map<Filter, bool>>(
                 MaterialPageRoute(
                   builder: (context) {
-                    return const FiltersScreen();
+                    return FiltersScreen(
+                      selectedFilters: selectedFilters,
+                    );
                   },
                 ),
               );
+              onFiltersScreenPop(selectedFilters: result!);
+
               //Another Routing Method using named routes
               // Navigator.of(context).pushNamed(FiltersScreen.routeName);
             },
