@@ -37,7 +37,11 @@ class MyApp extends StatelessWidget {
         //         fontWeight: FontWeight.bold)),
       ),
       // routes: {
-      //   FiltersScreen.routeName: (context) => const FiltersScreen(),
+      //   '/filters': (context) =>
+      //       const FiltersScreen(selectedFilters: kInitialFilters),
+      //   '/meals_overview': (context) =>
+      //       MealsScreen(category: availableCategories[0], meals: dummyMeals),
+      //   '/meal_details': (context) => MealDetailsScreen(meal: dummyMeals[0]),
       // },
       home: const AppLayout(),
     );
