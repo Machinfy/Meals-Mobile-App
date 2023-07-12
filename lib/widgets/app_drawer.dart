@@ -29,21 +29,31 @@ class AppDrawer extends StatelessWidget {
             title: 'Filters',
             onDrawerTilePressed: () async {
               // Pushing into Navigation Stack Code
-              // Creating route on the fly
-              final result =
-                  await Navigator.of(context).push<Map<Filter, bool>>(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return FiltersScreen(
-                      selectedFilters: selectedFilters,
-                    );
-                  },
-                ),
-              );
-              onFiltersScreenPop(selectedFilters: result!);
+              /// Creating route on the fly
+              // final result =
+              //     await Navigator.of(context).push<Map<Filter, bool>>(
+              //   MaterialPageRoute(
+              //     builder: (context) {
+              //       return FiltersScreen(
+              //         selectedFilters: selectedFilters,
+              //       );
+              //     },
+              //   ),
+              // );
 
-              //Another Routing Method using named routes
-              // Navigator.of(context).pushNamed(FiltersScreen.routeName);
+              ///Another Routing Method using named routes
+              Navigator.of(context)
+                  .pushNamed('/filters', arguments: selectedFilters)
+                  .then((result) {
+                result as Map<Filter, bool>;
+                onFiltersScreenPop(selectedFilters: result);
+              });
+
+              /// Same Code as the above code
+              // final result = await Navigator.of(context).pushNamed('/filters',
+              //     arguments: selectedFilters) as Map<Filter, bool>;
+
+              // onFiltersScreenPop(selectedFilters: result);
             },
           ),
         ],

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:meals/screens/filters_screen.dart';
+import 'package:meals/screens/meal_details_screen.dart';
+import 'package:meals/screens/meals_screen.dart';
 
 import 'layout/app_layout.dart';
 
@@ -36,6 +39,11 @@ class MyApp extends StatelessWidget {
         //         fontSize: 40,
         //         fontWeight: FontWeight.bold)),
       ),
+      routes: {
+        '/filters': (BuildContext context) => const FiltersScreen(),
+        '/meals': (context) => const MealsScreen(),
+        '/meal-details': (context) => const MealDetailsScreen(),
+      },
       // routes: {
       //   '/filters': (context) =>
       //       const FiltersScreen(selectedFilters: kInitialFilters),

@@ -15,9 +15,12 @@ const kInitialFilters = {
 };
 
 class FiltersScreen extends StatefulWidget {
-  const FiltersScreen({super.key, required this.selectedFilters});
+  const FiltersScreen({
+    super.key,
+    //required this.selectedFilters,
+  });
 
-  final Map<Filter, bool> selectedFilters;
+  // final Map<Filter, bool> selectedFilters;
   @override
   State<FiltersScreen> createState() => _FiltersScreenState();
 }
@@ -29,14 +32,36 @@ class _FiltersScreenState extends State<FiltersScreen> {
   var _vegetarianFilterSet = false;
   var _veganFilterSet = false;
 
+  var _isInit = false;
+  // @override
+  // void initState() {
+  //   // Called when the widget the created
+  //   super.initState();
+  //   Future.delayed(Duration.zero).then((_) {
+  //     final selectedFilters =
+  //         ModalRoute.of(context)!.settings.arguments as Map<Filter, bool>;
+  //     setState(() {
+  //       _glutenFreeFilterSet = selectedFilters[Filter.glutenFree]!;
+  //       _lactoseFreeFilterSet = selectedFilters[Filter.lactoseFree]!;
+  //       _vegetarianFilterSet = selectedFilters[Filter.vegetarian]!;
+  //       _veganFilterSet = selectedFilters[Filter.vegan]!;
+  //     });
+  //   });
+  //
+  // }
+
   @override
-  void initState() {
-    // Called when the widget the created
-    super.initState();
-    _glutenFreeFilterSet = widget.selectedFilters[Filter.glutenFree]!;
-    _lactoseFreeFilterSet = widget.selectedFilters[Filter.lactoseFree]!;
-    _vegetarianFilterSet = widget.selectedFilters[Filter.vegetarian]!;
-    _veganFilterSet = widget.selectedFilters[Filter.vegan]!;
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInit) {
+      final selectedFilters =
+          ModalRoute.of(context)!.settings.arguments as Map<Filter, bool>;
+      _glutenFreeFilterSet = selectedFilters[Filter.glutenFree]!;
+      _lactoseFreeFilterSet = selectedFilters[Filter.lactoseFree]!;
+      _vegetarianFilterSet = selectedFilters[Filter.vegetarian]!;
+      _veganFilterSet = selectedFilters[Filter.vegan]!;
+      _isInit = true;
+    }
   }
 
   @override

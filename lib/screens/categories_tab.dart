@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:meals/models/category.dart';
-import 'package:meals/screens/meals_screen.dart';
 
 import '../data/dummy_data.dart';
 import '../models/meal.dart';
 
 class CategoriesTab extends StatelessWidget {
-  const CategoriesTab({super.key, required this.meals});
+  const CategoriesTab(
+      {super.key, required this.meals, required this.onFavoriteButtonPressed});
 
   final List<Meal> meals;
+  final void Function({required Meal meal}) onFavoriteButtonPressed;
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
@@ -26,6 +27,7 @@ class CategoriesTab extends StatelessWidget {
           // id: availableCategories[index].id,
           category: availableCategories[index],
           meals: meals,
+          onFavoriteButtonPressed: onFavoriteButtonPressed,
         );
       },
       // Use children property when using normal GridView Widget
@@ -57,6 +59,7 @@ class CategoryGirdItem extends StatelessWidget {
     // required this.id,
     required this.category,
     required this.meals,
+    required this.onFavoriteButtonPressed,
   });
 
   // final Color categoryColor;
@@ -64,20 +67,28 @@ class CategoryGirdItem extends StatelessWidget {
   // final String id;
   final Category category;
   final List<Meal> meals;
+  final void Function({required Meal meal}) onFavoriteButtonPressed;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // TODO:- Navigate to meals screen
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => MealsScreen(
-              //categoryId: category.id,
-              meals: meals,
-              category: category,
-            ),
-          ),
-        );
+        /// Navigation Using Page Route (On the fly)
+        // Navigator.of(context).push(
+        //   MaterialPageRoute(
+        //     builder: (context) => MealsScreen(
+        //       //categoryId: category.id,
+        //       meals: meals,
+        //       category: category,
+        //     ),
+        //   ),
+        // );
+        final routeData = {
+          'meals': meals,
+          'category': category,
+          'onFavoriteButtonPressed': onFavoriteButtonPressed
+        };
+        Navigator.of(context).pushNamed('/meals', arguments: routeData);
       },
       child: Container(
         padding: const EdgeInsets.all(16),

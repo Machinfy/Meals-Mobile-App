@@ -2,15 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:meals/models/meal.dart';
 
 class MealDetailsScreen extends StatelessWidget {
-  const MealDetailsScreen({super.key, required this.meal});
+  const MealDetailsScreen({
+    super.key,
+    // required this.meal,
+  });
 
-  final Meal meal;
+  // final Meal meal;
   @override
   Widget build(BuildContext context) {
+    final routeData =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final meal = routeData['meal'] as Meal;
+    final onFavoriteButtonPressed = routeData['onFavoriteButtonPressed'] as void
+        Function({required Meal meal});
     return Scaffold(
         appBar: AppBar(title: Text(meal.title), actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              onFavoriteButtonPressed(meal: meal);
+            },
             icon: const Icon(Icons.star),
           )
         ]),
