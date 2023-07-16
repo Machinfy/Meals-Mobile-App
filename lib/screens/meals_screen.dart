@@ -22,8 +22,7 @@ class MealsScreen extends StatelessWidget {
     final routeMeals = routeData['meals'] as List<Meal>;
 
     final category = routeData['category'] as Category;
-    final onFavoriteButtonPressed = routeData['onFavoriteButtonPressed'] as void
-        Function({required Meal meal});
+
     final meals = routeMeals
         .where((meal) => meal.categories.contains(category.id))
         .toList();
@@ -40,8 +39,7 @@ class MealsScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.titleLarge),
             )
-          : MealsList(
-              meals: meals, onFavoriteButtonPressed: onFavoriteButtonPressed),
+          : MealsList(meals: meals),
     );
   }
 }

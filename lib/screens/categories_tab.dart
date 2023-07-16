@@ -5,11 +5,9 @@ import '../data/dummy_data.dart';
 import '../models/meal.dart';
 
 class CategoriesTab extends StatelessWidget {
-  const CategoriesTab(
-      {super.key, required this.meals, required this.onFavoriteButtonPressed});
+  const CategoriesTab({super.key, required this.meals});
 
   final List<Meal> meals;
-  final void Function({required Meal meal}) onFavoriteButtonPressed;
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
@@ -27,7 +25,6 @@ class CategoriesTab extends StatelessWidget {
           // id: availableCategories[index].id,
           category: availableCategories[index],
           meals: meals,
-          onFavoriteButtonPressed: onFavoriteButtonPressed,
         );
       },
       // Use children property when using normal GridView Widget
@@ -59,7 +56,6 @@ class CategoryGirdItem extends StatelessWidget {
     // required this.id,
     required this.category,
     required this.meals,
-    required this.onFavoriteButtonPressed,
   });
 
   // final Color categoryColor;
@@ -67,7 +63,6 @@ class CategoryGirdItem extends StatelessWidget {
   // final String id;
   final Category category;
   final List<Meal> meals;
-  final void Function({required Meal meal}) onFavoriteButtonPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +81,6 @@ class CategoryGirdItem extends StatelessWidget {
         final routeData = {
           'meals': meals,
           'category': category,
-          'onFavoriteButtonPressed': onFavoriteButtonPressed
         };
         Navigator.of(context).pushNamed('/meals', arguments: routeData);
       },

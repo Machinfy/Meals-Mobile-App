@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:meals/screens/filters_screen.dart';
 
 class AppDrawer extends StatelessWidget {
-  const AppDrawer(
-      {super.key,
-      required this.selectedFilters,
-      required this.onFiltersScreenPop});
+  const AppDrawer({super.key});
 
-  final Map<Filter, bool> selectedFilters;
-  final void Function({required Map<Filter, bool> selectedFilters})
-      onFiltersScreenPop;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -42,12 +35,7 @@ class AppDrawer extends StatelessWidget {
               // );
 
               ///Another Routing Method using named routes
-              Navigator.of(context)
-                  .pushNamed('/filters', arguments: selectedFilters)
-                  .then((result) {
-                result as Map<Filter, bool>;
-                onFiltersScreenPop(selectedFilters: result);
-              });
+              Navigator.of(context).pushNamed('/filters');
 
               /// Same Code as the above code
               // final result = await Navigator.of(context).pushNamed('/filters',

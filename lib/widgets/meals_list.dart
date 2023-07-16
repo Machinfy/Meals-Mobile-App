@@ -6,11 +6,9 @@ class MealsList extends StatelessWidget {
   const MealsList({
     super.key,
     required this.meals,
-    required this.onFavoriteButtonPressed,
   });
 
   final List<Meal> meals;
-  final void Function({required Meal meal}) onFavoriteButtonPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +24,6 @@ class MealsList extends StatelessWidget {
 
             final routeData = {
               'meal': meals[index],
-              'onFavoriteButtonPressed': onFavoriteButtonPressed,
             };
             Navigator.of(context)
                 .pushNamed('/meal-details', arguments: routeData);

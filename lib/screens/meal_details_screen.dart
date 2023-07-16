@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meals/blocs/favorites_cubit/favorites_cubit.dart';
+import 'package:meals/blocs/favorites_cubit/favorites_states.dart';
 import 'package:meals/models/meal.dart';
 
 class MealDetailsScreen extends StatelessWidget {
   const MealDetailsScreen({
     super.key,
-    // required this.meal,
+    // required this.meal
   });
 
   // final Meal meal;
@@ -13,15 +16,42 @@ class MealDetailsScreen extends StatelessWidget {
     final routeData =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final meal = routeData['meal'] as Meal;
-    final onFavoriteButtonPressed = routeData['onFavoriteButtonPressed'] as void
-        Function({required Meal meal});
+
     return Scaffold(
         appBar: AppBar(title: Text(meal.title), actions: [
           IconButton(
             onPressed: () {
-              onFavoriteButtonPressed(meal: meal);
+              BlocProvider.of<FavoritesCubit>(context)
+                  .changeFavoriteStatus(meal: meal);
             },
-            icon: const Icon(Icons.star),
+            icon: BlocConsumer<FavoritesCubit, FavoritesState>(
+              listener: (context, state) {
+                if (state is FavoritesChangedState) {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  if (state.isAdding) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        backgroundColor: Colors.green,
+                        content: Text('Meal added to favorites successfully')));
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        backgroundColor: Colors.red,
+                        content: Text(
+                          'Meal deleted from favorites successfully.',
+                          style: TextStyle(color: Colors.white),
+                        )));
+                  }
+                }
+              },
+              builder: (context, state) {
+                final favoritesCubit = BlocProvider.of<FavoritesCubit>(context);
+                return Icon(
+                  Icons.star,
+                  color: favoritesCubit.isMealInFavorite(meal: meal)
+                      ? Colors.green
+                      : Colors.grey,
+                );
+              },
+            ),
           )
         ]),
         body: SingleChildScrollView(

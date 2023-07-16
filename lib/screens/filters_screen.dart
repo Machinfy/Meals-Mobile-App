@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meals/blocs/filters_cubit/filters_cubit.dart';
 
 enum Filter {
   glutenFree,
@@ -55,7 +57,7 @@ class _FiltersScreenState extends State<FiltersScreen> {
     super.didChangeDependencies();
     if (!_isInit) {
       final selectedFilters =
-          ModalRoute.of(context)!.settings.arguments as Map<Filter, bool>;
+          BlocProvider.of<FiltersCubit>(context).selectedFilters;
       _glutenFreeFilterSet = selectedFilters[Filter.glutenFree]!;
       _lactoseFreeFilterSet = selectedFilters[Filter.lactoseFree]!;
       _vegetarianFilterSet = selectedFilters[Filter.vegetarian]!;
@@ -83,13 +85,14 @@ class _FiltersScreenState extends State<FiltersScreen> {
           //3 => async
           //4
           //5
-          Navigator.of(context).pop({
+          BlocProvider.of<FiltersCubit>(context)
+              .changeSelectedFilters(changedFilters: {
             Filter.glutenFree: _glutenFreeFilterSet,
             Filter.lactoseFree: _lactoseFreeFilterSet,
             Filter.vegan: _veganFilterSet,
             Filter.vegetarian: _vegetarianFilterSet,
           });
-          return false;
+          return true;
         },
         child: Column(
           children: [

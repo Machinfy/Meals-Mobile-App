@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:meals/data/dummy_data.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meals/blocs/filters_cubit/filters_cubit.dart';
+import 'package:meals/blocs/filters_cubit/filters_states.dart';
+import 'package:meals/blocs/meals_cubit/meals_cubit.dart';
 
 import '/screens/categories_tab.dart';
 import '/screens/favorites_tab.dart';
@@ -15,79 +18,56 @@ class AppLayout extends StatefulWidget {
 }
 
 class _AppLayoutState extends State<AppLayout> {
-  final _favoriteMeals = <Meal>[];
   var _currentTabIndex = 0;
-  var _selectedFilters = kInitialFilters;
-
-  void changeFavStatus({required Meal meal}) {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-    setState(() {
-      if (_favoriteMeals.contains(meal)) {
-        _favoriteMeals.remove(meal);
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Meal is deleted from Favorites',
-              style: TextStyle(color: Colors.white)),
-          backgroundColor: Colors.red,
-        ));
-      } else {
-        _favoriteMeals.add(meal);
-
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Meal is added to Favorites'),
-          backgroundColor: Colors.green,
-        ));
-      }
-    });
-  }
 
   List<Widget> getTabs({required List<Meal> meals}) {
     return [
-      CategoriesTab(
-        meals: meals,
-        onFavoriteButtonPressed: changeFavStatus,
+      BlocBuilder<FiltersCubit, FiltersState>(
+        builder: (context, state) {
+          final filtersCubit = BlocProvider.of<FiltersCubit>(context);
+          final selectedFilters = filtersCubit.selectedFilters;
+          final availableMeals = meals.where((meal) {
+            if (selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
+              return false;
+            }
+            if (selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
+              return false;
+            }
+            if (selectedFilters[Filter.vegan]! && !meal.isVegan) {
+              return false;
+            }
+            if (selectedFilters[Filter.vegetarian]! && !meal.isVegetarian) {
+              return false;
+            }
+            return true;
+          }).toList();
+          return CategoriesTab(
+            meals: availableMeals,
+          );
+        },
       ),
-      FavoritesTab(
-        meals: _favoriteMeals,
-        onFavoriteButtonPressed: changeFavStatus,
-      )
+      const FavoritesTab()
     ];
   }
 
-  void onFiltersScreenPop({required Map<Filter, bool> selectedFilters}) {
-    setState(() {
-      _selectedFilters = selectedFilters;
-    });
-    print(_selectedFilters);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   final mealsCubit = BlocProvider.of<MealsCubit>(context);
+  //   mealsCubit.getMealsData();
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final meals = BlocProvider.of<MealsCubit>(context).meals;
     // AvailableMealsBasedOnFilters
-    final availableMeals = dummyMeals.where((meal) {
-      if (_selectedFilters[Filter.glutenFree]! && !meal.isGlutenFree) {
-        return false;
-      }
-      if (_selectedFilters[Filter.lactoseFree]! && !meal.isLactoseFree) {
-        return false;
-      }
-      if (_selectedFilters[Filter.vegan]! && !meal.isVegan) {
-        return false;
-      }
-      if (_selectedFilters[Filter.vegetarian]! && !meal.isVegetarian) {
-        return false;
-      }
-      return true;
-    }).toList();
     return Scaffold(
-      drawer: AppDrawer(
-          selectedFilters: _selectedFilters,
-          onFiltersScreenPop: onFiltersScreenPop),
+      drawer: const AppDrawer(),
       // endDrawer: Drawer(),
       appBar: AppBar(
         title: Text(_currentTabIndex == 0 ? 'Categories' : 'Favorites'),
       ),
-      body: getTabs(meals: availableMeals)[_currentTabIndex],
+      body: getTabs(meals: meals)[_currentTabIndex],
       bottomNavigationBar: BottomNavigationBar(
         // selectedItemColor: Colors.red,
         // unselectedItemColor: Colors.grey,
